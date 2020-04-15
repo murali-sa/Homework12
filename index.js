@@ -86,7 +86,7 @@ function view() {
             case 'employee':
                 connection.query(`SELECT * FROM ${db}`, function (err, data) {
                     if (err) throw err;
-                    console.table(data)
+                    console.table(data);
                 })
                 view();
                 break;
@@ -153,7 +153,7 @@ function addDepartment() {
             // should we check if the department name already exists?
             connection.query(`INSERT INTO department (name) VALUES ('${depName}')`, function (err, data) {
                 if (err) throw err;
-                console.log(`Added`, depName)
+                console.log(`Added`, depName);
                 init();
             })
         })
@@ -168,6 +168,30 @@ function addemployee() {
 }
 //
 function update() {
-    console.log("update chosen:");
+    var update = '';
+    inquirer
+        .prompt(
+            {
+                name: 'update',
+                message: 'What would you like to UPDATE?',
+                type: 'list',
+                choices: ['role', 'employee', 'Go Back']
+            }
+        ).then(function ({ update }) {
+            switch (update) {
+                case 'role':
+                    console.log("update role");
+                    //        update_role();
+                    break;
+                case 'employee':
+                    //        update_employee();
+                    console.log("update employee");
+                    break;
+                case 'Go Back':
+                    init();
+                    return;
+            }
+            init();
+        })
 }
 //

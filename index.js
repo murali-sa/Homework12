@@ -81,7 +81,9 @@ function view() {
         }
     ]).then(function ({ db }) {
         switch (db) {
-            case 'department' || 'role' || 'employee':
+            case 'department':
+            case 'role':
+            case 'employee':
                 connection.query(`SELECT * FROM ${db}`, function (err, data) {
                     if (err) throw err;
                     console.table(data)
@@ -92,11 +94,6 @@ function view() {
                 init();
                 return;
         }
-     /*   connection.query(`SELECT * FROM ${db}`, function (err, data) {
-            if (err) throw err;
-            console.table(data)
-        //    init();
-        }) */
     })
 }
 //

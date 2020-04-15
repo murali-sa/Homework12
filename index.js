@@ -25,6 +25,7 @@ init();
 // start the program
 //
 function init() {
+    var todo = '';
     inquirer.prompt([
         {
             type: "list",
@@ -62,10 +63,48 @@ function init() {
     });
 }
 //
+// function view - department, role, employee, or exit
+//
+function view() {
+    var db = '';
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "What would you like to VIEW?",
+            name: "db",
+            choices: [
+                "department",
+                "role",
+                "employee",
+                "Go Back"
+            ]
+        }
+    ]).then(function ({ db }) {
+        switch (db) {
+            case 'department' || 'role' || 'employee':
+                connection.query(`SELECT * FROM ${db}`, function (err, data) {
+                    if (err) throw err;
+                    console.table(data)
+                })
+                view();
+                break;
+            case 'Go Back':
+                init();
+                return;
+        }
+     /*   connection.query(`SELECT * FROM ${db}`, function (err, data) {
+            if (err) throw err;
+            console.table(data)
+        //    init();
+        }) */
+    })
+}
+//
+//
 // function add - department, role, employee, or exit
 //
 function add() {
-    console.log("add chosen:");
+    var toAdd = '';
     inquirer.prompt([
         {
             type: "list",
@@ -104,7 +143,7 @@ function add() {
 }
 //
 function addDepartment() {
-    console.log("add Department:");
+    var depName = '';
     inquirer
         .prompt(
             {
@@ -112,13 +151,14 @@ function addDepartment() {
                 message: "Enter department name:",
                 type: 'input'
             }
-        ).then(function (data) {
-            var depName = data.depName;
+        ).then(function ({ depName }) {
+            // var depName = data.depName;
             // should we check if the department name already exists?
-            //     connection.query(`INSERT INTO department (name) VALUES ('${depName}')`, function (err, data) {
-            //         if (err) throw err;
-            console.log(`Added`, depName)
-            //         getJob();
+            connection.query(`INSERT INTO department (name) VALUES ('${depName}')`, function (err, data) {
+                if (err) throw err;
+                console.log(`Added`, depName)
+                init();
+            })
         })
 }
 //
@@ -128,9 +168,6 @@ function addRole() {
 //
 function addemployee() {
     console.log("add Employee:");
-}
-function view() {
-    console.log("view chosen:");
 }
 //
 function update() {
